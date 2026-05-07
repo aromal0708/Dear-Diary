@@ -1,0 +1,47 @@
+import pool from "@/app/lib/db";
+import { NextResponse } from "next/server";
+import bcrypt from "bcrypt";
+
+export const POST = async (req: Request) => {
+  try {
+    const { name, email, password } = await req.json();
+
+    if (!name || !email || !password) {
+      return NextResponse.json(
+        { message: "All feilds required" },
+        { status: 400 },
+      );
+    }
+
+    const [existingUser]: any = await pool.query(
+      `select * form users where email = ?`,
+      [email],
+    );
+
+    if (existingUser.length > 0) {
+      return NextResponse.json(
+        { message: "User already exists" },
+        { status: 400 },
+      );
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const uuid = crypto.randomUUID();
+
+    await pool.query(
+      `insert into users (id,name, email, password) values (?,?,?,?)`,
+      [uuid, name, email, hashedPassword],
+    );
+
+    return NextResponse.json(
+      { message: "User created successfully" },
+      { status: 201 },
+    );
+  } catch (error) {
+    return NextResponse.json(
+      { message: "Internal server error" },
+      { status: 501 },
+    );
+  }
+};
