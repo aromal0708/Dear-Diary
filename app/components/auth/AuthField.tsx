@@ -5,6 +5,8 @@ type AuthFieldProps = {
   placeholder?: string;
   autoComplete?: string;
   required?: boolean;
+  onChange?: React.ChangeEventHandler<HTMLInputElement>;
+  value?: string;
 };
 
 export function AuthField({
@@ -14,6 +16,8 @@ export function AuthField({
   placeholder,
   autoComplete,
   required = false,
+  onChange,
+  value,
 }: AuthFieldProps) {
   return (
     <label className="text-sm text-neutral-700">
@@ -25,6 +29,8 @@ export function AuthField({
         placeholder={placeholder}
         autoComplete={autoComplete}
         required={required}
+        onChange={onChange}
+        value={value}
       />
     </label>
   );
