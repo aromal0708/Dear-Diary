@@ -39,10 +39,8 @@ export default function SignupPage() {
         const errorData = await res.json();
         throw new Error(errorData.message || "Signup failed");
       }
-
       const data = await res.json();
       console.log("Signup successful:", data);
-      // Optionally, redirect to login page or dashboard after successful signup
     } catch (error) {
       console.error("Error during signup:", error);
     }

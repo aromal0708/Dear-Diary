@@ -1,12 +1,43 @@
+"use client";
 import Link from "next/link";
-
 import { AuthButton } from "../../components/auth/AuthButton";
 import { AuthField } from "../../components/auth/AuthField";
 import { AuthHeader } from "../../components/auth/AuthHeader";
 import { AuthShell } from "../../components/auth/AuthShell";
 import { AuthVisual } from "../../components/auth/AuthVisual";
+import { useState } from "react";
+import { signIn } from "next-auth/react";
+
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const router = useRouter();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      if (!email || !password) {
+        throw new Error("Email and password are required");
+      }
+      const res = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+        callbackUrl: "/dashboard",
+      });
+
+      if (res?.ok) {
+        router.push("/dashboard");
+      } else {
+        throw new Error(res?.error || "Login failed");
+      }
+    } catch (error) {
+      console.error("Login failed:", error);
+    }
+  };
   return (
     <AuthShell visual={<AuthVisual />}>
       <div className="w-full max-w-md space-y-6">
@@ -14,13 +45,15 @@ export default function LoginPage() {
           title="Welcome back"
           subtitle="Settle in and continue your quiet journaling ritual."
         />
-        <form className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <AuthField
             label="Email address"
             name="email"
             type="email"
             placeholder="you@justdiary.com"
             autoComplete="email"
+            onChange={(e) => setEmail(e.target.value)}
+            value={email}
             required
           />
           <AuthField
@@ -28,6 +61,8 @@ export default function LoginPage() {
             name="password"
             type="password"
             placeholder="Enter your password"
+            onChange={(e) => setPassword(e.target.value)}
+            value={password}
             autoComplete="current-password"
             required
           />
@@ -40,7 +75,10 @@ export default function LoginPage() {
               />
               Remember me
             </label>
-            <Link className="text-emerald-900 hover:text-emerald-700" href="/forgot-password">
+            <Link
+              className="text-emerald-900 hover:text-emerald-700"
+              href="/forgot-password"
+            >
               Forgot password?
             </Link>
           </div>
@@ -48,7 +86,10 @@ export default function LoginPage() {
         </form>
         <p className="text-sm text-neutral-600">
           New here?{" "}
-          <Link className="font-semibold text-emerald-900 hover:text-emerald-700" href="/signup">
+          <Link
+            className="font-semibold text-emerald-900 hover:text-emerald-700"
+            href="/signup"
+          >
             Create an account
           </Link>
         </p>

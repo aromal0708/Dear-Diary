@@ -1,4 +1,7 @@
+"use client";
+import { redirect } from "next/navigation";
 import { FeatureGrid } from "./FeatureGrid";
+import Link from "next/link";
 
 export function HeroSection() {
   return (
@@ -10,14 +13,17 @@ export function HeroSection() {
         Your calm space for thoughts, streaks, and pinned memories.
       </h1>
       <p className="max-w-xl text-base leading-relaxed text-neutral-700 sm:text-lg">
-        A focused journaling app that keeps the essentials front and center. Capture an
-        entry, keep your streak alive, and pin the moments you want to revisit.
+        A focused journaling app that keeps the essentials front and center.
+        Capture an entry, keep your streak alive, and pin the moments you want
+        to revisit.
       </p>
       <div className="flex flex-wrap gap-3">
-        <button className="rounded-full bg-emerald-900 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-900/20 transition hover:-translate-y-0.5">
-          Start a new entry
-        </button>
-        <button className="rounded-full border border-emerald-900/20 bg-white/80 px-6 py-3 text-sm font-semibold text-emerald-900">
+        <Link href="/signup">
+          <button className="cursor-pointer rounded-full bg-emerald-900 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-900/20 transition hover:-translate-y-0.5">
+            Start a new entry
+          </button>
+        </Link>
+        <button className="cursor-pointer rounded-full border border-emerald-900/20 bg-white/80 px-6 py-3 text-sm font-semibold text-emerald-900">
           View pinned moments
         </button>
       </div>
