@@ -3,7 +3,7 @@ import pool from "./db";
 import bcrypt from "bcrypt";
 import { AuthOptions, Session } from "next-auth";
 
-export const authOptions:AuthOptions = {
+export const authOptions: AuthOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -12,18 +12,21 @@ export const authOptions:AuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-
-        if(!credentials){
-            throw new Error("No Credentials Provided");
+        if (!credentials) {
+          throw new Error("No Credentials Provided");
         }
         const { email, password } = credentials as {
           email: string;
           password: string;
         };
+
+        console.log(credentials);
         const [user]: any = await pool.query(
           `select * from users where email= ?`,
           [email],
         );
+
+        console.log(user);
 
         if (user.length < 0) {
           throw new Error("User Not Found");
@@ -38,21 +41,19 @@ export const authOptions:AuthOptions = {
         }
 
         return {
-            id:user[0].id,
-            email:user[0].email,
-            name:user[0].name
-        }
+          id: user[0].id,
+          email: user[0].email,
+          name: user[0].name,
+        };
       },
     }),
-    
   ],
   secret: process.env.NEXTAUTH_SECRET,
-  session:{
-    strategy:"jwt",
-    maxAge: 7 * 24 * 60 * 60, // 
+  session: {
+    strategy: "jwt",
+    maxAge: 7 * 24 * 60 * 60,
   },
-  pages:{
-    signIn:'/login'
+  pages: {
+    signIn: "/login",
   },
-
 };
