@@ -13,7 +13,10 @@ export default async function proxy(req: NextRequest) {
   if (token && pathname === "/login") {
     return NextResponse.redirect(new URL("/dashboard", req.url));
   }
+  if (token && pathname === "/signup") {
+    return NextResponse.redirect(new URL("/dashboard", req.url));
+  }
   return NextResponse.next();
 }
 
-export const config = { matcher: ["/dashboard", "/login"] };
+export const config = { matcher: ["/dashboard", "/login", "/signup"] };
