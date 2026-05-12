@@ -6,7 +6,7 @@ export default async function proxy(req: NextRequest) {
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
   const { pathname } = req.nextUrl;
 
-  if (!token) {
+  if (!token && pathname === "/dashboard") {
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
